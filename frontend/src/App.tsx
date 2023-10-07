@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
-import { connect, sendMsg } from './api';
+import React, { useEffect, useMemo, useState } from 'react';
+import { connectWebSocket, sendWbMsg } from './web-socket';
 
 function App() {
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const [messages, setMessages] = useState<MessageEvent<any>[]>([])
+    const webSocket = useMemo(() => new WebSocket("ws://localhost:8080/ws"), [])
 
     useEffect(() => {
-        connect(socket)
+        connectWebSocket(webSocket, setMessages)
     }, [])
 
     return (
         <div className="App">
-            <button onClick={() => sendMsg(socket, "hello3")}>Hit</button>
+            <button onClick={() => sendWbMsg(webSocket, "hello3")}>Hit</button>
+            <ul>
+                {messages.map((message, index) => <li key={index}>{message.data}</li>)}
+            </ul>
         </div>
     );
 }
