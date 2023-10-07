@@ -1,20 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { connectWebSocket, sendWbMsg } from './web-socket';
+import { handleOnMessage, sendWbMsg } from './web-socket';
 
 function App() {
-    const [messages, setMessages] = useState<MessageEvent<any>[]>([])
-    const webSocket = useMemo(() => new WebSocket("ws://localhost:8080/ws"), [])
+    const [messageEvents, seMessageEvents] = useState<MessageEvent<any>[]>([])
+    const [message, setMessage] = useState("")
 
     useEffect(() => {
-        connectWebSocket(webSocket, setMessages)
+        handleOnMessage(seMessageEvents)
     }, [])
 
     return (
         <div className="App">
-            <button onClick={() => sendWbMsg(webSocket, "hello3")}>Hit</button>
+            
             <ul>
-                {messages.map((message, index) => <li key={index}>{message.data}</li>)}
+                {messageEvents.map((message, index) => <li key={index}>{message.data}</li>)}
             </ul>
+
+            <div>
+                <input type="text" value={message} onChange={(event) => setMessage(event.target.value)}/>
+            </div>
+            <button onClick={() => sendWbMsg(message)}>
+                Send message
+            </button>
         </div>
     );
 }
