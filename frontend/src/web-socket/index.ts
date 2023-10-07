@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 
+// TODO: use domain or IPv4 Address with port for use with several devices
+// const socket = new WebSocket("ws://192.168.0.106:8080/ws");
 const socket = new WebSocket("ws://localhost:8080/ws");
 console.log("connecting");
 
